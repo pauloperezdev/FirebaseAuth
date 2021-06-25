@@ -93,8 +93,15 @@
         var uid = user.uid;
         var usuario = user.displayName;
         var email = user.email;
+        var verificado = user.emailVerified;
+        var textoVerificado = "";
+        if(verificado===false){
+           textoVerificado = "Email no verificado";
+        }else{
+           textoVerificado = "Verificado";
+        }
         // ...
-        document.getElementById('login').innerHTML = "Usuario: " + email;
+        document.getElementById('login').innerHTML = "Usuario: " + email + " "+textoVerificado;
       } else {
         // User is signed out
         // ...
@@ -120,6 +127,17 @@
           var errorMessage = error.message;
           alert(errorMessage);
         })
+        .then(function(){
+            verificar();
+        })
+    }
+
+    function verificar(){
+      firebase.auth().currentUser.sendEmailVerification()
+      .then(() => {
+        // Email verification sent!
+        // ...
+      });
     }
 
     function acceso() {
@@ -132,6 +150,7 @@
           // Signed in
           var user = userCredential.user;
           // ...
+          verificar();
           console.log(user);
           document.getElementById('login').innerHTML = "UsuarioCred: " + user.email;
         })
